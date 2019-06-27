@@ -1,12 +1,14 @@
-let d;
+let p;
 const window_width = 600;
 const window_height = 600;
+let start, target;
+let popsize = 100;
 
 function setup() {
-    let start = createVector(window_width/2, window_height-15);
-    let target = createVector(window_width/2, 15);
     createCanvas(window_width,window_height);
-    d = new dot(start, target);
+    start = createVector(window_width/2, window_height-25);
+    target = createVector(window_width/2, 15);
+    p = new Population(popsize, start, target);
 }
 
 function draw() {
@@ -15,8 +17,12 @@ function draw() {
     // draw target
     fill(200, 0, 0);
     stroke(0);
-    ellipse(this.target.x, this.target.y, 20, 20);
+    ellipse(target.x, target.y, 20, 20);
+    
+    // population
+    for (let i = 0; i < popsize; i++) {
+        p.dots[i].run();
+    }
 
-    d.run();
 }
 
