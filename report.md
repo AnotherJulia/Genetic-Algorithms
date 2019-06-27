@@ -1,4 +1,4 @@
 # Inhoud
-1. Theoretisch kader(#theoretisch-kader)
+1. [Theoretisch kader](#theoretisch-kader)
 
 ## Theoretisch kader
