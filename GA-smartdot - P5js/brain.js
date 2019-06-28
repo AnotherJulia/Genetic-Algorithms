@@ -1,5 +1,5 @@
 class Brain {
-    
+
     constructor(s) {
         this.size = s;
         this.directions = new Array(this.size);
@@ -37,7 +37,7 @@ class Brain {
             console.log(this.directions[i].toString());
         }
         console.log('working');
-        
+
     }
 
 }

@@ -13,16 +13,13 @@ function setup() {
 
 function draw() {
     background(100);
-    
+
     // draw target
     fill(200, 0, 0);
     stroke(0);
     ellipse(target.x, target.y, 20, 20);
-    
+
     // population
-    for (let i = 0; i < popsize; i++) {
-        p.dots[i].run();
-    }
+    p.run();
 
 }
-

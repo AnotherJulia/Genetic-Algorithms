@@ -16,7 +16,7 @@ class dot {
 
     run() {
         this.move();
-        
+
         // collision
         if (this.pos.x < 2 || this.pos.y < 2 || this.pos.x > window_width-2 || this.pos.y > window_height-2) {
             this.dead = true;
