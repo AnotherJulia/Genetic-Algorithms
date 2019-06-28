@@ -22,7 +22,7 @@ function DNA(genes) {
       }
       return new DNA(newgenes);
     }
-  
+
     this.mutation = function() {
       for (var i = 0; i < this.genes.length; i++) {
         if (random(1) < 0.01) {
@@ -31,5 +31,5 @@ function DNA(genes) {
         }
       }
     }
-  
+
   }

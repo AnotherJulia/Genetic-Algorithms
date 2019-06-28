@@ -1,6 +1,8 @@
 var population;
 var lifespan = 400;
 var lifeP;
+var gen = 1;
+var genP;
 var count = 0;
 var target;
 var maxforce = 0.2;
@@ -15,19 +17,21 @@ function setup() {
   population = new Population();
   lifeP = createP();
   target = createVector(width / 2, 50);
-
+  genP = createP();
 }
 
 function draw() {
   background(200);
   population.run();
   lifeP.html(count);
+  genP.html(gen);
 
   count++;
   if (count == lifespan) {
     population.evaluate();
     population.selection();
     count = 0;
+    gen++;
   }
   fill(255);
   rect(rx, ry, rw, rh);
