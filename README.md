@@ -1,8 +1,6 @@
-# Profielwerkstuk - Genetische Algoritmen
+# PWS - Genetic Algorithms
+Researching how to evolve a population within an ecosystem using natural systems (in javascript with the libraries p5.js and chart.js)
 
-1. Voorwoord
-2. Inleiding
-3. Onderzoeksplan
-4. Theoretisch kader
-5. Methode
-6. Resultaten
+# Important
+1. maxspeed is currently a constant (see issue #13)
+2. spawnmethod is to be determined (see issue #12)
