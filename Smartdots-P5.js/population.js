@@ -1,6 +1,6 @@
 function Population() {
     this.dots = [];
-    this.popsize = 200;
+    this.popsize = 100;
     this.matingpool = [];
 
     for (var i = 0; i < this.popsize; i++) {
