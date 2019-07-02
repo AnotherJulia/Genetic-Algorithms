@@ -22,7 +22,7 @@ function draw() {
     for (let i = 0; i < popsize; i++) {
         dots[i].run();
     }
-
+    
     checkBFC();
 }
 
