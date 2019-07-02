@@ -73,6 +73,7 @@ class Dot {
         // draw dot
         fill(2, 100);
         stroke(0);
+        strokeWeight(1);
         ellipse(this.pos.x, this.pos.y, this.size, this.size);
 
         //draw radius
