@@ -2,16 +2,17 @@
 var window_width = 600;
 var window_height = 600;
 
-let middle;
+let start;
 let dots;
 var popsize = 10;
 
-function setup() {
-    middle = createVector(window_width/2, window_height/2);     // #12
+function setup() { 
     createCanvas(window_width, window_height);
     dots = new Array(popsize);
     for (let i = 0; i < popsize; i++) {
-        dots[i] = new Dot(middle);
+        //start = createVector(random(0,window_width), random(0, window_height));
+        start = createVector(window_width/2, window_height/2);
+        dots[i] = new Dot(start);
     }
 
 }
