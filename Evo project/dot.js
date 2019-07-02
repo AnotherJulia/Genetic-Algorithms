@@ -13,9 +13,10 @@ class Dot {
         
         this.dir_value = 0.1;
         this.BFC = 1;
+
+        this.hasTarget = false;
     }
     run() {
-        this.dir = p5.Vector.random2D().mult(this.dir_value);
         this.applyForce(this.dir);
         this.checkBoundary();
         this.update();
@@ -28,6 +29,12 @@ class Dot {
             this.pos.add(this.vel);
             this.vel.limit(this.maxspeed);
             this.acc.mult(0);
+
+            if (this.hasTarget) {
+                // move towards target
+            } else {
+                this.moveRandom();
+            }
         }
     }
 
@@ -36,28 +43,28 @@ class Dot {
             this.BFC = this.vel.mag();
             this.BoundaryForce = createVector(this.BFC, 0);
             this.applyForce(this.BoundaryForce);
-            this.dir = p5.Vector.random2D().mult(this.dir_value);
+            this.moveRandom();
         }
 
         else if (this.pos.x > window_width-1) {
             this.BFC = this.vel.mag();
             this.BoundaryForce = createVector(-this.BFC, 0);
             this.applyForce(this.BoundaryForce);
-            this.dir = p5.Vector.random2D().mult(this.dir_value);
+            this.moveRandom();
         }
 
         else if (this.pos.y < 1) {
             this.BFC = this.vel.mag();
             this.BoundaryForce = createVector(0, this.BFC);
             this.applyForce(this.BoundaryForce);
-            this.dir = p5.Vector.random2D().mult(this.dir_value);
+            this.moveRandom();
         }
 
         else if (this.pos.y > window_height-1) {
             this.BFC = this.vel.mag();
             this.BoundaryForce = createVector(0, -this.BFC);
             this.applyForce(this.BoundaryForce);
-            this.dir = p5.Vector.random2D().mult(this.dir_value);
+            this.moveRandom();
         }
 
     }
@@ -77,6 +84,18 @@ class Dot {
 
     applyForce(force) {
         this.acc.add(force);
+    }
+
+    checkForTarget() {
+        //check for target in range
+    }
+
+    moveTowardsTarget(target) {
+        // move towards target after checking for location
+    }
+
+    moveRandom() {
+        this.dir = p5.Vector.random2D().mult(this.dir_value);
     }
 
 

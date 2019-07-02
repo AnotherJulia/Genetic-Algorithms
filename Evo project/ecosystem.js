@@ -23,10 +23,11 @@ function draw() {
         dots[i].run();
     }
 
-    checkBFC();
 }
 
-    // ----- DEBUG CODES
+
+// ----- DEBUG CODES
+
 function checkBFC() {
     for (let i = 0; i < popsize; i++) {
         console.log(dots[i].BFC);
