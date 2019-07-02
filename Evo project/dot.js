@@ -17,6 +17,7 @@ class Dot {
         this.hasTarget = false;
     }
     run() {
+        this.checkForTarget();
         this.applyForce(this.dir);
         this.checkBoundary();
         this.update();
@@ -88,11 +89,21 @@ class Dot {
     }
 
     checkForTarget() {
-        //check for target in range
+        let closest;
+        let index = 0;
+        for (let i = 0; i < food_amount; i++) {
+            let d = dist(this.pos.x, this.pos.y, food[i].pos.x, food[i].pos.y);
+            if (d < this.sense && d < closest) {
+                closest = d;
+                index = i;
+            }
+
+        }
+        this.moveTowardsTarget(index);
     }
 
-    moveTowardsTarget(target) {
-        // move towards target after checking for location
+    moveTowardsTarget(target_index) {
+        
     }
 
     moveRandom() {
