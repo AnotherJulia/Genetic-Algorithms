@@ -5,7 +5,6 @@ var window_height = 600;
 let start;
 let dots;
 var popsize = 10;
-let dead;
 
 function setup() { 
     createCanvas(window_width, window_height);
