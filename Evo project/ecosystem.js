@@ -5,6 +5,7 @@ var window_height = 600;
 let middle;
 let dots;
 var popsize = 10;
+let dead;
 
 function setup() {
     middle = createVector(window_width/2, window_height/2);     // #12
