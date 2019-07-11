@@ -10,7 +10,7 @@ let food;
 let dotpos;
 
 // amounts of objects in ecosystem
-let popsize = 1;
+let popsize = 10;
 let food_amount = 10;
 
 function setup() { 
