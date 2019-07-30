@@ -6,22 +6,22 @@ class Dot {
 
         this.maxspeed = 2;                     // #13
         this.size = 10;                        // #14
-        this.sense = 150;
+        this.sense = 100;
 
         this.dead = false;
         this.dir = p5.Vector.random2D(); 
         
         this.dir_value = 0.1;
-        this.BFC = 1;
+        this.BFC = 1;                           // Boundary Force Constant
 
         this.hasTarget = false;
+        this.foodEaten = 0;
     }
     run() {
-        this.checkForTarget();
-        this.applyForce(this.dir);
         this.checkBoundary();
         this.update();
         this.show();
+        this.checkForTarget();
     }
 
     update() {
@@ -31,12 +31,9 @@ class Dot {
             this.vel.limit(this.maxspeed);
             this.acc.mult(0);
 
-            if (this.hasTarget) {
-                // move towards target
-            } else {
-                this.moveRandom();
-            }
+            if(!this.hasTarget) this.moveRandom();
         }
+        
     }
 
     checkBoundary() {
@@ -89,25 +86,36 @@ class Dot {
     }
 
     checkForTarget() {
-        let closest;
-        let index = 0;
+        let inRange = new Array();
         for (let i = 0; i < food_amount; i++) {
-            let d = dist(this.pos.x, this.pos.y, food[i].pos.x, food[i].pos.y);
-            if (d < this.sense && d < closest) {
-                closest = d;
-                index = i;
+            let d = dist(food[i].pos.x, food[i].pos.y, this.pos.x, this.pos.y);
+            if (d < this.sense) {
+                inRange.push(food[i]);
+            }
+        }
+
+        if (!inRange.length == 0) {
+            let closest = this.sense;
+            let target;
+            for (let i = 0; i < inRange.length; i++) {
+                let d = dist(inRange[i].pos.x, inRange[i].pos.y, this.pos.x, this.pos.y);
+                if (d < closest) {
+                    target = inRange[i];
+                    closest = d;
+                }
             }
 
+            let desired = target.pos.sub(this.pos);
+            desired.normalize();
+            desired.mult(this.maxspeed);
+            let steeringForce = desired.sub(this.vel);
+            this.applyForce(steeringForce);
         }
-        this.moveTowardsTarget(index);
-    }
-
-    moveTowardsTarget(target_index) {
-        
     }
 
     moveRandom() {
         this.dir = p5.Vector.random2D().mult(this.dir_value);
+        this.applyForce(this.dir);
     }
 
 
