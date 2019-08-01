@@ -16,6 +16,7 @@ class Dot {
 
         this.hasTarget = false;
         this.food_eaten = 0;
+        this.eating = false;
     }
     run() {
         this.checkBoundary();
@@ -87,20 +88,24 @@ class Dot {
 
     checkForTarget() {
         let inRange = new Array();
-        for (let i = 0; i < food_amount; i++) {
+        let indexArray = new Array();
+        for (let i = 0; i < food.length; i++) {
             let d = dist(food[i].pos.x, food[i].pos.y, this.pos.x, this.pos.y);
             if (d < this.sense) {
                 inRange.push(food[i]);
+                indexArray.push(i);
             }
         }
 
         if (!inRange.length == 0) {
             let closest = this.sense;
-            let target;
+            let target, targetIndex;
+
             for (let i = 0; i < inRange.length; i++) {
                 let d = dist(inRange[i].pos.x, inRange[i].pos.y, this.pos.x, this.pos.y);
                 if (d < closest) {
                     target = inRange[i];
+                    targetIndex = indexArray[i];
                     closest = d;
                 }
             }
@@ -112,19 +117,15 @@ class Dot {
             let steeringForce = desired.sub(this.vel);
             this.applyForce(steeringForce);
 
-            for (let i = 0; i < food_amount; i++) {
-                if (dist(targetpos.x, targetpos.y, this.pos.x, this.pos.y) <= this.size) {
-                    let index = food.indexOf(target);
-                    food.splice(target,1);
-                    this.food_eaten++;
+            for (let i = 0; i < food.length; i++) {
+                let d = dist(target.pos.x, target.pos.y, this.pos.x, this.pos.y);
+                if (d < this.size) {
+                    console.log(targetIndex);
+                    this.food_eaten += 1;
+                    food.splice(targetIndex, 1);
                 }
-            }
-
-
-
+            } 
             
-
-
         }
     }
 

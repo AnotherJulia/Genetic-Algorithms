@@ -23,7 +23,7 @@ function setup() {
         dots[i] = new Dot(dotpos);
     }
 
-    for (let i = 0; i < food_amount; i++) {
+    for (let i = 0; i < food.length; i++) {
         food[i] = new Food();
     }
 
@@ -33,7 +33,7 @@ function draw() {
     background(200);
     
     for (let i = 0; i < popsize; i++) dots[i].run();
-    for (let i = 0; i < food_amount; i++) food[i].run();
+    for (let i = 0; i < food.length; i++) food[i].run();
 
 }
 
