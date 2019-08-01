@@ -4,6 +4,10 @@ class Food {
         this.size = 7;
     }
 
+    run() {
+        this.show();
+    }
+
     show(){
         fill(0, 100, 0);
         strokeWeight(1);

@@ -15,7 +15,7 @@ class Dot {
         this.BFC = 1;                           // Boundary Force Constant
 
         this.hasTarget = false;
-        this.foodEaten = 0;
+        this.food_eaten = 0;
     }
     run() {
         this.checkBoundary();
@@ -105,11 +105,26 @@ class Dot {
                 }
             }
 
-            let desired = target.pos.sub(this.pos);
+            let targetpos = createVector(target.pos.x, target.pos.y); //fixed food removing from function (resetting position by using sub)
+            let desired = targetpos.sub(this.pos);
             desired.normalize();
             desired.mult(this.maxspeed);
             let steeringForce = desired.sub(this.vel);
             this.applyForce(steeringForce);
+
+            for (let i = 0; i < food_amount; i++) {
+                if (dist(targetpos.x, targetpos.y, this.pos.x, this.pos.y) <= this.size) {
+                    let index = food.indexOf(target);
+                    food.splice(target,1);
+                    this.food_eaten++;
+                }
+            }
+
+
+
+            
+
+
         }
     }
 

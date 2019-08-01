@@ -10,8 +10,8 @@ let food;
 let dotpos;
 
 // amounts of objects in ecosystem
-let popsize = 5;
-let food_amount = 50;
+let popsize = 1;
+let food_amount = 10;
 
 function setup() { 
     createCanvas(window_width, window_height);
@@ -33,7 +33,7 @@ function draw() {
     background(200);
     
     for (let i = 0; i < popsize; i++) dots[i].run();
-    for (let i = 0; i < food_amount; i++) food[i].show();
+    for (let i = 0; i < food_amount; i++) food[i].run();
 
 }
 
