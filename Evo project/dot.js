@@ -1,23 +1,28 @@
 class Dot {
     constructor(startpos) {
+        // Vector variables
         this.pos = startpos;
         this.vel = createVector();
         this.acc = createVector();
 
-        this.maxspeed = 2;                     // #13
-        this.size = 10;                        // #14
+        // Genetic Variables
+        this.maxspeed = 2;                     
+        this.size = 10;                        
         this.sense = 100;
 
+        // Genetic Algorithm
         this.dead = false;
-        this.dir = p5.Vector.random2D(); 
-        
-        this.dir_value = 0.1;
-        this.BFC = 1;                           // Boundary Force Constant
 
+        // Move random + Check for Boundary
+        this.dir = p5.Vector.random2D(); 
+        this.dir_value = 0.1;
+        this.BFC = 1; //(Boundary Force Constant)
+
+        // Picking up food (Check for target)
         this.hasTarget = false;
         this.food_eaten = 0;
-        this.eating = false;
     }
+
     run() {
         this.checkBoundary();
         this.update();
@@ -32,9 +37,10 @@ class Dot {
             this.vel.limit(this.maxspeed);
             this.acc.mult(0);
 
-            if(!this.hasTarget) this.moveRandom();
+            if(!this.hasTarget) {
+                this.moveRandom();
+            }
         }
-        
     }
 
     checkBoundary() {
@@ -65,17 +71,16 @@ class Dot {
             this.applyForce(this.BoundaryForce);
             this.moveRandom();
         }
-
     }
 
     show() {
-        // draw dot
+        //Draw dot
         fill(2, 100);
         stroke(0);
         strokeWeight(1);
         ellipse(this.pos.x, this.pos.y, this.size, this.size);
 
-        //draw radius
+        //Draw radius
         noFill();
         stroke(0, 50);
         strokeWeight(0.5);
@@ -117,15 +122,13 @@ class Dot {
             let steeringForce = desired.sub(this.vel);
             this.applyForce(steeringForce);
 
-            for (let i = 0; i < food.length; i++) {
-                let d = dist(target.pos.x, target.pos.y, this.pos.x, this.pos.y);
-                if (d < this.size) {
-                    console.log(targetIndex);
-                    this.food_eaten += 1;
-                    food.splice(targetIndex, 1);
-                }
-            } 
             
+            let d = dist(target.pos.x, target.pos.y, this.pos.x, this.pos.y);
+            if (d < this.size) {
+                console.log(targetIndex);
+                this.food_eaten += 1;
+                food.splice(targetIndex, 1);
+            } 
         }
     }
 
@@ -133,11 +136,4 @@ class Dot {
         this.dir = p5.Vector.random2D().mult(this.dir_value);
         this.applyForce(this.dir);
     }
-
-
-
-
-
-
-
 }

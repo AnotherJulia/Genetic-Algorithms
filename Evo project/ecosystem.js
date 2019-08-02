@@ -26,7 +26,6 @@ function setup() {
     for (let i = 0; i < food.length; i++) {
         food[i] = new Food();
     }
-
 }
 
 function draw() {
