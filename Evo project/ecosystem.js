@@ -8,9 +8,14 @@ let offset_var = 100;
 let dots;
 let food;
 
+// Genetic variable standard
+let gen_maxspeed = [1,3];
+let gen_sense = [75,150];
+let gen_size = [5,15];
+
 // amounts of objects in ecosystem
 let popsize = 5;
-let food_amount = 40;
+let food_amount = 3;
 
 function setup() { 
     createCanvas(window_width, window_height);
@@ -18,7 +23,6 @@ function setup() {
     food = new Array(food_amount);
     
     for (let i = 0; i < popsize; i++) {
-
         // Calculate startposition
         let posx = window_width/popsize * i;
         let posy = window_height/popsize * i;
@@ -47,9 +51,9 @@ function draw() {
 
 
 // ----- DEBUG CODES
-
 function checkBFC() {
     for (let i = 0; i < popsize; i++) {
         console.log(dots[i].BFC);
     }
 }
+

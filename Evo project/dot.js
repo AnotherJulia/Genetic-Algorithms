@@ -6,9 +6,10 @@ class Dot {
         this.acc = createVector();
 
         // Genetic Variables
-        this.maxspeed = 2;                     
-        this.size = 10;                        
-        this.sense = 100;
+        this.DNA = new DNA();
+        this.maxspeed = this.DNA.maxspeed;                     
+        this.size = this.DNA.size;                        
+        this.sense = this.DNA.sense;
 
         // Genetic Algorithm
         this.dead = false;
@@ -125,13 +126,13 @@ class Dot {
             let steeringForce = desired.sub(this.vel);
             this.applyForce(steeringForce);
 
-            
+            // Collision manager
             let d = dist(target.pos.x, target.pos.y, this.pos.x, this.pos.y);
             if (d < this.size) {
                 this.food_eaten += 1;
                 food.splice(targetIndex, 1);
             } 
-        }
+        }   
     }
 
     showFood() {
