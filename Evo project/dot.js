@@ -1,7 +1,7 @@
 class Dot {
     constructor(startpos) {
         // Vector variables
-        this.pos = startpos;
+        this.pos = createVector(startpos.x, startpos.y);
         this.vel = createVector();
         this.acc = createVector();
 
@@ -18,9 +18,10 @@ class Dot {
         this.dir_value = 0.1;
         this.BFC = 1; //(Boundary Force Constant)
 
-        // Picking up food (Check for target)
+        // Picking up food (Check for target) and display text
         this.hasTarget = false;
         this.food_eaten = 0;
+        this.textOffset = 25;
     }
 
     run() {
@@ -85,6 +86,8 @@ class Dot {
         stroke(0, 50);
         strokeWeight(0.5);
         ellipse(this.pos.x, this.pos.y, this.sense, this.sense);
+
+        this.showFood();
     }
 
     applyForce(force) {
@@ -125,11 +128,17 @@ class Dot {
             
             let d = dist(target.pos.x, target.pos.y, this.pos.x, this.pos.y);
             if (d < this.size) {
-                console.log(targetIndex);
                 this.food_eaten += 1;
                 food.splice(targetIndex, 1);
             } 
         }
+    }
+
+    showFood() {
+        fill(0);
+        stroke(255);
+        textAlign(CENTER);
+        text(this.food_eaten, this.pos.x, this.pos.y+this.textOffset);
     }
 
     moveRandom() {

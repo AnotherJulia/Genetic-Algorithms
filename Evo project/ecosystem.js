@@ -1,17 +1,16 @@
 // ecosystem.js -- Main file
 const window_width = 600;
 const window_height = 600;
+let offset = 50;
+let offset_var = 100;
 
 // arrays of objects
 let dots;
 let food;
 
-//startposition of objects
-let dotpos;
-
 // amounts of objects in ecosystem
-let popsize = 1;
-let food_amount = 10;
+let popsize = 5;
+let food_amount = 40;
 
 function setup() { 
     createCanvas(window_width, window_height);
@@ -19,7 +18,17 @@ function setup() {
     food = new Array(food_amount);
     
     for (let i = 0; i < popsize; i++) {
-        dotpos = createVector(window_width/2, window_height/2);
+
+        // Calculate startposition
+        let posx = window_width/popsize * i;
+        let posy = window_height/popsize * i;
+        
+        if (posx < offset_var) posx += offset;
+        else if (posx > window_width-offset_var) posx -= offset;
+        if (posy < offset_var) posy += offset;
+        else if (posy > window_height - offset_var)posy -= offset;
+        
+        let dotpos = createVector(posx, posy);
         dots[i] = new Dot(dotpos);
     }
 
