@@ -238,7 +238,7 @@ function debugDNA() {
     // Print out arrays
     console.log("MAXSPEED " + avgMaxspeed);
     console.log("SIZE " + avgSize);
-    console.log("SENSE " + avgSense);s
+    console.log("SENSE " + avgSense);
 
     /*
     let avg_maxspeed = sumArray(avgMaxspeed)/avgMaxspeed.length;
