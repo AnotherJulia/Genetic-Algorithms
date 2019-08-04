@@ -103,7 +103,6 @@ function generationController() {
                 alive.push(dots[i]);
             }
         }
-        gen+=1;
         Selection();
     }
 

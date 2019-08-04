@@ -69,10 +69,12 @@ class Dot {
     energyController() {
         let energycost = .5 * (.5 *(this.maxspeed)^2 + this.sense);
 
-        if (this.current_energy <= 0) {
-            this.outOfEnergy = true;
-        } else {
-            this.current_energy -= energycost;
+        if (!this.pause) {
+            if (this.current_energy <= 0) {
+                this.outOfEnergy = true;
+            } else {
+                this.current_energy -= energycost;
+            }
         }
     }
 
@@ -155,7 +157,8 @@ class Dot {
             if (this.justSpawned == true) {
                 this.justSpawned = false;
                 targetIndex = random(food.length);
-                target = food[targetIndex];
+                target = food[targetIndex]
+                
             }
 
             let targetpos = createVector(target.pos.x, target.pos.y); //fixed food removing from function (resetting position by using sub)
