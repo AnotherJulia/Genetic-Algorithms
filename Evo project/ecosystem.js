@@ -20,10 +20,11 @@ let gen_size = [5,15];
 let gen = 0;
 let matingpool, newGen;
 let mutationrate = 0.05;
+let alive = new Array();
 
 // amounts of objects in ecosystem
-let popsize = 10;
-let food_amount = 40;
+let popsize = 20;
+let food_amount = 200;
 
 // Running the program
 function setup() { 
@@ -68,29 +69,44 @@ function showUI() {
     stroke(0);
     strokeWeight(2);
     textSize(15);
-    text("Generation: " + gen, window_width-100, window_height-20);
+    textAlign(RIGHT);
+    text("Generation: " + gen, window_width-10, window_height-20);
+    text("Population size: " + dots.length, window_width-10, window_height-50)
 }
 
 // Genetic algorithm controller
 function generationController() {
-    let alive = new Array();
-
+    // Check conditions for next generations
+    let nextGen = false;
+    
+    // Food
     if (food.length == 0) {
-        for(let i = 0; i < dots.length; i++) {
-            dots[i].dead = true;
-        }
+        nextGen = true;
     }
 
+    // Energy
+    let energyStatus = true;
     for (let i = 0; i < dots.length; i++) {
-        if (dots[i].dead == false) {
-            alive.push(dots[i]);
+        if (dots[i].outOfEnergy == false) {
+            energyStatus = false;
         }
     }
+    if (energyStatus == true) {
+        nextGen = true;
+    }
 
-    if (alive.length == 0) {
+    // Next Generation
+    if (nextGen == true) {
+        // Get dots that are alive (out of energy)
+        for (let i = 0; i < dots.length; i++) {
+            if (dots[i].dead == false) {
+                alive.push(dots[i]);
+            }
+        }
         gen+=1;
         Selection();
-    } 
+    }
+
 }
 
 // Selection function with fitness function
@@ -118,17 +134,15 @@ function Selection() {
 
 // reproduction process
 function gimmeBaby(matingpool) {
-    for (let i = 0; i < matingpool.length; i++) {
-        matingpool[i].getFitness();
-    }
     if (matingpool.length >= 2) {
         for (let i = 0; i < Math.floor(matingpool.length); i++) {
             let parentA = random(matingpool);
             matingpool.pop(parentA);
             let parentB = random(matingpool);
+            matingpool.pop(parentB);
             newGen.push(parentA);
             newGen.push(parentB);
-            matingpool.pop(parentB);
+
             let childDNA = crossover(parentA.DNA, parentB.DNA);
             childDNA.mutate();
 

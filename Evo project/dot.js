@@ -34,12 +34,14 @@ class Dot {
         this.textOffset = 25;
 
         // Calculating energy etc
-        this.maxenergy = 100;
+        this.maxenergy = 15000;
         this.current_energy = this.maxenergy;
+        this.outOfEnergy = false;
     }
 
 
     run() {
+        this.energyController();
         this.checkBoundary();
         this.update();
         this.show();
@@ -48,11 +50,7 @@ class Dot {
 
     update() {
 
-        if (this.current_energy <= 0) {
-            this.dead = true;
-        }
-
-        if (!this.dead && !this.pause) {
+        if (!this.dead && !this.pause && !this.outOfEnergy) {
             this.vel.add(this.acc);
             this.pos.add(this.vel);
             this.vel.limit(this.maxspeed);
@@ -65,6 +63,16 @@ class Dot {
             }
         } else {
             this.opacity = 100;
+        }
+    }
+
+    energyController() {
+        let energycost = .5 * (.5 *(this.maxspeed)^2 + this.sense);
+
+        if (this.current_energy <= 0) {
+            this.outOfEnergy = true;
+        } else {
+            this.current_energy -= energycost;
         }
     }
 
@@ -106,7 +114,7 @@ class Dot {
         ellipse(this.pos.x, this.pos.y, this.size, this.size);
 
         //Draw radius and showFood function only when not dead
-        if (!this.dead) {
+        if (!this.dead && !this.outOfEnergy) {
             noFill();
             stroke(0, 50);
             strokeWeight(0.5);
@@ -142,6 +150,12 @@ class Dot {
                     targetIndex = indexArray[i];
                     closest = d;
                 }
+            }
+
+            if (this.justSpawned == true) {
+                this.justSpawned = false;
+                targetIndex = random(food.length);
+                target = food[targetIndex];
             }
 
             let targetpos = createVector(target.pos.x, target.pos.y); //fixed food removing from function (resetting position by using sub)

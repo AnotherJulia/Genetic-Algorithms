@@ -4,7 +4,7 @@ class DNA {
         this.randomValues();
         
         // Set debugMode
-        if (debugMode == true) {
+        if (debugmode == true) {
             this.debugSense();
             this.debugSpeed();
         }
