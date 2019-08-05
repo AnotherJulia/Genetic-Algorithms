@@ -20,10 +20,12 @@ let gen_size = [5,15];
 let gen = 0;
 let matingpool, newGen;
 let mutationrate = 0.05;
+
 let alive = new Array();
+let deadDots = new Array();
 
 // amounts of objects in ecosystem
-let popsize = 20;
+let popsize = 4;
 let food_amount = 200;
 
 // Running the program
@@ -47,7 +49,7 @@ function setup() {
     }
 
     for (let i = 0; i < food.length; i++) {
-        food[i] = new Food();
+        food[i] = new Food(0, 100, 0);
     }
 }
 
@@ -71,7 +73,9 @@ function showUI() {
     textSize(15);
     textAlign(RIGHT);
     text("Generation: " + gen, window_width-10, window_height-20);
-    text("Population size: " + dots.length, window_width-10, window_height-50)
+    textAlign(LEFT);
+    text("Population size: " + dots.length, 10, window_height-20);
+    text('Food Amount: ' + food.length, 10, window_height-40);
 }
 
 // Genetic algorithm controller
@@ -91,6 +95,7 @@ function generationController() {
             energyStatus = false;
         }
     }
+
     if (energyStatus == true) {
         nextGen = true;
     }
@@ -108,59 +113,8 @@ function generationController() {
 
 }
 
-// Selection function with fitness function
-function Selection() {
-    // Fitness function (rules of life)
-    newGen = new Array();
-    matingpool = new Array();
-    for (let i = 0; i < dots.length; i++) {
-        if (dots[i].food_eaten == 1) {
-            newGen.push(dots[i]);
-        } else if (dots[i].food_eaten >= 2) {
-            matingpool.push(dots[i]);
-        }
-    }
-
-    if (matingpool.length != 0) {
-        gimmeBaby(matingpool);
-        dots = newGen;
-        gen+=1
-        resetDots();
-        resetFood();
-    }
-}
-
-
 // reproduction process
-function gimmeBaby(matingpool) {
-    if (matingpool.length >= 2) {
-        for (let i = 0; i < Math.floor(matingpool.length); i++) {
-            let parentA = random(matingpool);
-            matingpool.pop(parentA);
-            let parentB = random(matingpool);
-            matingpool.pop(parentB);
-            newGen.push(parentA);
-            newGen.push(parentB);
 
-            let childDNA = crossover(parentA.DNA, parentB.DNA);
-            childDNA.mutate();
-
-            // new child must get new spawnposition;
-            let temp_spawnPos = createVector(window_width/2, window_height/2);
-            let child = new Dot(temp_spawnPos, childDNA);
-            newGen.push(child);
-        }
-    }
-}
-
-function crossover(parentA, parentB) {
-    //for now just copy the maxspeed and size from A en sense from B
-    let newDNA = new DNA();
-    newDNA.maxspeed = parentA.maxspeed;
-    newDNA.size = parentA.size;
-    newDNA.sense = parentB.sense;
-    return newDNA;
-}
 
 function resetDots() {
     for (let i = 0; i < dots.length; i++) {
@@ -185,87 +139,6 @@ function resetDots() {
 function resetFood() {
     food = new Array();
     for (let i = 0; i < food_amount; i++) {
-        food.push(new Food());
+        food.push(new Food(0, 100, 0));
     }
-}
-
-// ------------------------------------------- DEBUG CODES ------------------------------------
-// Boundary Force Constant (BFC) 
-function debugBFC() {
-    for (let i = 0; i < dots.length; i++) {
-        console.log(dots[i].BFC);
-    }
-}
-
-// Energy
-function debugEnergy() {
-    for (let i = 0; i < dots.length; i++ ) {
-        console.log(i + "  " + dots[i].current_energy);
-    }
-}
-
-function debugResetEnergy(resetVal) {
-    for (let i = 0; i < dots.length; i++ ) {
-        dots[i].current_energy = resetVal;
-    }
-}
-
-// pause and depause dots
-function debugPause() {
-    for(let i = 0; i < dots.length; i++) {
-        dots[i].pause = true;
-    }
-}
-
-function debugUnpause() {
-    for (let i = 0; i < dots.length; i++) {
-        dots[i].pause = false;
-        dots[i].opacity = 255;
-    }
-}
-
-// get fitness function from each dot
-function debugFitness() {
-    for (let i = 0; i < matingpool.length; i++) {
-        console.log(i + "  " + matingpool[i].fitness);
-    }
-}
-
-// Get population length
-function debugPopSize() {
-    console.log(dots.length);
-}
-
-// Get all genetic variables
-function debugDNA() {
-    let avgMaxspeed = new Array();
-    let avgSize = new Array();
-    let avgSense = new Array();
-
-    for (let i = 0; i < dots.length; i++) {
-        avgMaxspeed.push(dots[i].DNA.maxspeed);
-        avgSize.push(dots[i].DNA.size);
-        avgSense.push(dots[i].DNA.sense);
-    }
-
-    // Print out arrays
-    console.log("MAXSPEED " + avgMaxspeed);
-    console.log("SIZE " + avgSize);
-    console.log("SENSE " + avgSense);
-
-    /*
-    let avg_maxspeed = sumArray(avgMaxspeed)/avgMaxspeed.length;
-    console.log("Average maxspeed is " + avg_maxspeed);
-    */
-}
-
-function sumArray(list) {
-    let sum;
-    for (let i = 0; i < list.length; i++) {
-        if (isNaN(list[i])) {
-            continue;
-        } 
-        sum += list[i];
-    }
-    return sum;
 }
