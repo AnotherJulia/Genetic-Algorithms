@@ -1,7 +1,9 @@
 // ecosystem.js -- Main file
 
 // Initialize and declare variables
-const window_width = 600;
+const window_width2 = 800;
+let borderoffset = 200;
+const window_width = window_width2-borderoffset;
 const window_height = 600;
 let debugmode = false;
 
@@ -30,7 +32,7 @@ let food_amount = 100;
 
 // Running the program
 function setup() { 
-    createCanvas(window_width, window_height);                              //Multiple canvasses?
+    createCanvas(window_width2, window_height);                              //Multiple canvasses?
     dots = new Array(init_popsize);
     food = new Array(food_amount);
     
@@ -76,6 +78,10 @@ function showUI() {
     textAlign(LEFT);
     text("Population size: " + dots.length, 10, window_height-20);
     text('Food Amount: ' + food.length, 10, window_height-40);
+
+
+    // Draw line to seperate simulation window from statistics
+    line(window_width, 0, window_width, window_height);
 }
 
 // Genetic algorithm controller
