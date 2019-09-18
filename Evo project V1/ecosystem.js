@@ -25,19 +25,19 @@ let alive = new Array();
 let deadDots = new Array();
 
 // amounts of objects in ecosystem
-let popsize = 4;
+let init_popsize = 4;
 let food_amount = 200;
 
 // Running the program
 function setup() { 
-    createCanvas(window_width, window_height);
-    dots = new Array(popsize);
+    createCanvas(window_width, window_height);                              //Multiple canvasses?
+    dots = new Array(init_popsize);
     food = new Array(food_amount);
     
-    for (let i = 0; i < popsize; i++) {
+    for (let i = 0; i < init_popsize; i++) {
         // Calculate startposition
-        let posx = window_width/popsize * i;
-        let posy = window_height/popsize * i;
+        let posx = window_width/init_popsize * i;
+        let posy = window_height/init_popsize * i;
         
         if (posx < offset_var) posx += offset;
         else if (posx > window_width-offset_var) posx -= offset;
@@ -123,8 +123,8 @@ function resetDots() {
 
     for (let i = 0; i < dots.length; i++) {
         // Calculate startposition
-        let posx = window_width/popsize * i;
-        let posy = window_height/popsize * i;
+        let posx = window_width/init_popsize * i;
+        let posy = window_height/init_popsize * i;
         
         if (posx < offset_var) posx += offset;
         else if (posx > window_width-offset_var) posx -= offset;

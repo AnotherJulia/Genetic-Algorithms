@@ -14,7 +14,7 @@ function Selection() {
                 for (let j = 0; j < amount_of_children; j++) {
                     matingpool.push(dots[i]);
                 }
-                dots[i].current_energy += 10000
+                dots[i].current_energy += 1000
             }
         } else if (dots[i].food_eaten == 1) {
             newGen.push(dots[i]);
