@@ -26,7 +26,7 @@ let deadDots = new Array();
 
 // amounts of objects in ecosystem
 let init_popsize = 4;
-let food_amount = 200;
+let food_amount = 100;
 
 // Running the program
 function setup() { 
@@ -123,16 +123,22 @@ function resetDots() {
 
     for (let i = 0; i < dots.length; i++) {
         // Calculate startposition
-        let posx = window_width/init_popsize * i;
-        let posy = window_height/init_popsize * i;
+        let posx = window_width/dots.length * i;
+        let posy = window_height/dots.length * i;
         
         if (posx < offset_var) posx += offset;
         else if (posx > window_width-offset_var) posx -= offset;
         if (posy < offset_var) posy += offset;
         else if (posy > window_height - offset_var)posy -= offset;
         
-        let dotpos = createVector(posx, posy);
-        dots[i] = new Dot(dotpos , new DNA());
+        //let dotpos = createVector(posx, posy);
+        //let dotpos = createVector(window_width/2, window_height/2);
+
+        let dotx = random(window_width/5 * 2, window_width/5 * 3);
+        let doty = random(window_height/5 * 2, window_height/5 * 3)
+
+        let dotpos = createVector(dotx, doty);
+        dots[i] = new Dot(dotpos , dots[i].DNA);
     }
 }
 
