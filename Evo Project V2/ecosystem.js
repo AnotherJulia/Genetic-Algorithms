@@ -1,58 +1,51 @@
-// Ecosystem.js --- Main File (setup and update all objects)
+// ecosystem.js -- Main file
 
-// Initialize / Declare variables
-let debugmode = true;
+// Initialize and declare variables
+const window_width = 600;
+const window_height = 600;
+let debugmode = false;
 
-// Windows
-const window_width = 1200;
-const window_height = 1200;
-
-// Border Offset
+// border offset
 let offset = 50;
 let offset_var = 100;
 
-// Object Arrays
-let dots, food;
+// arrays of objects
+let dots;
+let food;
 
-// Genetic Variable Standard values
+// Genetic variable standard
 let gen_maxspeed = [1,3];
 let gen_sense = [75,150];
 let gen_size = [5,15];
-
-// Genetic Variables
 let gen = 0;
 let matingpool, newGen;
 let mutationrate = 0.05;
-// Genetic Arrays
+
 let alive = new Array();
 let deadDots = new Array();
 
-// amounts of objects in ecosystem (on initialization)
+// amounts of objects in ecosystem
 let init_popsize = 4;
 let food_amount = 200;
 
-// Buffers
-let leftBuffer, rightBuffer;
-let dot;
-
-
-// ----------------------------------------------------------------------------------------------------
-
-function setup() {
-
-    // Window
-    createCanvas(window_width, window_height);
-    leftBuffer = createGraphics(window_width/2, window_height/2);
-    rightBuffer = createGraphics(window_width/2, window_height/2);
-
-    // Declare arrays
+// Running the program
+function setup() { 
+    createCanvas(window_width, window_height);                              //Multiple canvasses?
     dots = new Array(init_popsize);
     food = new Array(food_amount);
-
-    // Create dots in dot array (calculationStartPosition
-    dedde)
-    for (let i = 0; i < dots.length; i++) {
-        dots[i].newDot(CalculateStartposition());
+    
+    for (let i = 0; i < init_popsize; i++) {
+        // Calculate startposition
+        let posx = window_width/init_popsize * i;
+        let posy = window_height/init_popsize * i;
+        
+        if (posx < offset_var) posx += offset;
+        else if (posx > window_width-offset_var) posx -= offset;
+        if (posy < offset_var) posy += offset;
+        else if (posy > window_height - offset_var)posy -= offset;
+        
+        let dotpos = createVector(posx, posy);
+        dots[i] = new Dot(dotpos);
     }
 
     for (let i = 0; i < food.length; i++) {
@@ -61,35 +54,18 @@ function setup() {
 }
 
 function draw() {
-    drawLeftBuffer();
-    drawRightBuffer();
-
-    image(leftBuffer, 0, 0);
-    image(rightBuffer, window_width/2+20, 0);
-
-    // Updating dots and food array
+    background(200);
+    
     for (let i = 0; i < dots.length; i++) dots[i].run();
-    for (let i = 0; i < dots.length; i++) food[i].run();
-
+    for (let i = 0; i < food.length; i++) food[i].run();
+    
     // Controllers
     generationController();
     showUI();
-
 }
 
-function drawLeftBuffer() {
-    leftBuffer.background(200);
-    leftBuffer.fill(255, 255, 255);
-    leftBuffer.textSize(32);
-}
 
-function drawRightBuffer() {
-    rightBuffer.background(200);
-    rightBuffer.fill(0, 0, 0);
-    rightBuffer.textSize(32);
-}
-
-// Show UI with generation, popsize and amount of food remaining
+// Show UI function 
 function showUI() {
     fill(255);
     stroke(0);
@@ -102,61 +78,67 @@ function showUI() {
     text('Food Amount: ' + food.length, 10, window_height-40);
 }
 
-
-// Calculate start position within the frame 
-function CalculateStartposition () {
-    let posx = window_width/init_popsize * i;
-    let posy = window_height/init_popsize * i;
-        
-    if (posx < offset_var) posx += offset;
-    else if (posx > window_width-offset_var) posx -= offset;
-    if (posy < offset_var) posy += offset;
-    else if (posy > window_height - offset_var)posy -= offset;
-        
-    let dotpos = createVector(posx, posy);
-    return dotpos;
-}
-
-
+// Genetic algorithm controller
 function generationController() {
+    // Check conditions for next generations
     let nextGen = false;
+    
+    // Food
+    if (food.length == 0) {
+        nextGen = true;
+    }
 
+    // Energy
     let energyStatus = true;
     for (let i = 0; i < dots.length; i++) {
-        if (dots[i].outOfEnerfy == false) {
+        if (dots[i].outOfEnergy == false) {
             energyStatus = false;
         }
     }
 
-    if (food.length == 0) {
-        nextGen = true;
-    } else if (energyStatus == true) {
+    if (energyStatus == true) {
         nextGen = true;
     }
 
-
+    // Next Generation
     if (nextGen == true) {
+        // Get dots that are alive (out of energy)
         for (let i = 0; i < dots.length; i++) {
-            if (dots[i].dead = false) {
+            if (dots[i].dead == false) {
                 alive.push(dots[i]);
             }
         }
         Selection();
     }
+
 }
 
+// reproduction process
 
-// Reset Data
+
 function resetDots() {
     for (let i = 0; i < dots.length; i++) {
         dots[i].food_eaten = 0;
-        dots[i] = new Dot(CalculateStartposition(), new DNA());
+    }
+
+    for (let i = 0; i < dots.length; i++) {
+        // Calculate startposition
+        let posx = window_width/init_popsize * i;
+        let posy = window_height/init_popsize * i;
+        
+        if (posx < offset_var) posx += offset;
+        else if (posx > window_width-offset_var) posx -= offset;
+        if (posy < offset_var) posy += offset;
+        else if (posy > window_height - offset_var)posy -= offset;
+        
+        let dotpos = createVector(posx, posy);
+        dots[i] = new Dot(dotpos , new DNA());
     }
 }
 
 function resetFood() {
     food = new Array();
     for (let i = 0; i < food_amount; i++) {
-        food.push(new Food(0, 100, 0);
+        food.push(new Food(0, 100, 0));
     }
 }

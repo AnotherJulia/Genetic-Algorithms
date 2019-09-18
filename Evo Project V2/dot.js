@@ -1,12 +1,13 @@
 class Dot {
-
     constructor(startpos, dna) {
-        // Check for dna
         if (this.dna) {
             this.DNA = dna;
         } else {
             this.DNA = new DNA();
         }
+
+        this.opacity = 255;
+        this.paused = false;
 
         // Vector variables
         this.pos = createVector(startpos.x, startpos.y);
@@ -18,6 +19,8 @@ class Dot {
         this.size = this.DNA.size;                        
         this.sense = this.DNA.sense;
         this.fitness;
+
+        // Genetic Algorithm
         this.dead = false;
 
         // Move random + Check for Boundary
@@ -33,35 +36,45 @@ class Dot {
         // Calculating energy etc
         this.maxenergy = 15000;
         this.current_energy = this.maxenergy;
-        this.OutOfEnergy = false;
+        this.outOfEnergy = false;
     }
 
 
     run() {
+        this.energyController();
+        this.checkBoundary();
         this.update();
+        this.show();
+        this.checkForTarget();
     }
 
     update() {
-        if (!this.dead && !this.OutOfEnergy) {
-            
-            if (!this.hasTarget) {
+
+        if (!this.dead && !this.pause && !this.outOfEnergy) {
+            this.vel.add(this.acc);
+            this.pos.add(this.vel);
+            this.vel.limit(this.maxspeed);
+            this.acc.mult(0);
+
+            this.opacity = 255;
+
+            if(!this.hasTarget) {
                 this.moveRandom();
             }
-            
-            this.move();
-            this.opacity = 255;
         } else {
-            this.opacity = 100;        
-        }   
+            this.opacity = 100;
+        }
     }
 
     energyController() {
-        let energycost = .5 * (.5 * (this.maxspeed)^2 + this.sense);
+        let energycost = .5 * (.5 *(this.maxspeed)^2 + this.sense);
 
-        if (this.current_energy <= 0) {
-            this.outOfEnergy = true;
-        } else {
-            this.current_energy -= energycost;
+        if (!this.pause) {
+            if (this.current_energy <= 0) {
+                this.outOfEnergy = true;
+            } else {
+                this.current_energy -= energycost;
+            }
         }
     }
 
@@ -73,7 +86,7 @@ class Dot {
             this.moveRandom();
         }
 
-        else if (this.pos.x > window_width/2-1) {
+        else if (this.pos.x > window_width-1) {
             this.BFC = this.vel.mag();
             this.BoundaryForce = createVector(-this.BFC, 0);
             this.applyForce(this.BoundaryForce);
@@ -87,7 +100,7 @@ class Dot {
             this.moveRandom();
         }
 
-        else if (this.pos.y > window_height/2-1) {
+        else if (this.pos.y > window_height-1) {
             this.BFC = this.vel.mag();
             this.BoundaryForce = createVector(0, -this.BFC);
             this.applyForce(this.BoundaryForce);
@@ -95,27 +108,24 @@ class Dot {
         }
     }
 
-    // Show function (must be used for every object nearby? --> see Issue #44)
-    display() {
+    show() {
+        //Draw dot
         fill(250, this.opacity);
         stroke(0, this.opacity);
         strokeWeight(1);
-        ellipseMode(CENTER);
-        ellipse(this.loc.x, this.loc.y, this.size, this.size);
+        ellipse(this.pos.x, this.pos.y, this.size, this.size);
 
-        if (!this.dead) {
+        //Draw radius and showFood function only when not dead
+        if (!this.dead && !this.outOfEnergy) {
             noFill();
-            stroke(0,50);
-            strokeWeight(.5);
-            ellipseMode(RADIUS);
-            ellipse(this.pos.x, this.pos.y, this.sense, this.sense)
+            stroke(0, 50);
+            strokeWeight(0.5);
+            ellipse(this.pos.x, this.pos.y, this.sense, this.sense);
 
-            this.showFoodUI();
+            this.showFood();
         }
-
     }
 
-    // Apply force to acceleration 
     applyForce(force) {
         this.acc.add(force);
     }
@@ -123,9 +133,6 @@ class Dot {
     checkForTarget() {
         let inRange = new Array();
         let indexArray = new Array();
-
-        // Check when distance is less than the sense of an object 
-        //--> if so? then add it to the inRange and indexArray lists
         for (let i = 0; i < food.length; i++) {
             let d = dist(food[i].pos.x, food[i].pos.y, this.pos.x, this.pos.y);
             if (d < this.sense) {
@@ -134,13 +141,10 @@ class Dot {
             }
         }
 
-        // When inRange array is not empty (undefined error)
         if (!inRange.length == 0) {
             let closest = this.sense;
             let target, targetIndex;
 
-            // Check what object in the inRange array is the closest to the object 
-            // and set that object to the new closest
             for (let i = 0; i < inRange.length; i++) {
                 let d = dist(inRange[i].pos.x, inRange[i].pos.y, this.pos.x, this.pos.y);
                 if (d < closest) {
@@ -149,34 +153,38 @@ class Dot {
                     closest = d;
                 }
             }
-        }
 
-        // Seeking Behavior for the object, target
-        let targetpos = createVector(target.loc.x, target.loc.y);
-        let desired = targetpos.sub(this.loc);
-        desired.normalize();
-        desired.mult(this.maxspeed);
-        let steeringForce = desired.sub(this.vel);
-        this.applyForce(steeringForce);
+            if (this.justSpawned == true) {
+                this.justSpawned = false;
+                targetIndex = random(food.length);
+                target = food[targetIndex]
+                
+            }
 
-        // Collision Manager food and Object
-        let d = dist(targetpos.x, targetpos.x, this.loc.x, this.loc.y);
-        if (d < this.size) {
-            this.food_eaten += 1;
-            food.splice(targetIndex, 1);
-        }
+            let targetpos = createVector(target.pos.x, target.pos.y); //fixed food removing from function (resetting position by using sub)
+            let desired = targetpos.sub(this.pos);
+            desired.normalize();
+            desired.mult(this.maxspeed);
+            let steeringForce = desired.sub(this.vel);
+            this.applyForce(steeringForce);
+
+            // Collision manager
+            let d = dist(target.pos.x, target.pos.y, this.pos.x, this.pos.y);
+            if (d < this.size) {
+                this.food_eaten += 1;
+                food.splice(targetIndex, 1);
+            } 
+        }   
     }
 
-    // Food UI above the dot object
-    showFoodUI() {
+    showFood() {
         fill(0);
         stroke(255);
         textAlign(CENTER);
         textSize(10);
-        this.textOffset(this.food_eaten, this.loc.x, this.loc.y + this.textOffset);
+        text(this.food_eaten, this.pos.x, this.pos.y+this.textOffset);
     }
 
-    // Move object in random2D direction
     moveRandom() {
         this.dir = p5.Vector.random2D().mult(this.dir_value);
         this.applyForce(this.dir);
@@ -186,6 +194,5 @@ class Dot {
     getFitness() {
         this.fitness = this.food_eaten / food.length;
     }
-
 
 }
