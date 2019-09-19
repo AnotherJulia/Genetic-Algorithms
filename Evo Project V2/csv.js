@@ -8,7 +8,6 @@ function configureData() {
     var addedData = [gen, dots.length, AVG_speed, AVG_size, AVG_sense];
     if (debugmode) {
         console.log(addedData);
-
     }
     data.push(addedData);
 }

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evolution Dashboard</title>
+    <style> body {padding: 0; margin: 0;} </style>
+    <script src='https://cdn.jsdelivr.net/npm/chart.js@2.8.0/dist/Chart.min.js'></script>
+
+    </script>
+  </head>
+  <body>
+
+    <canvas id="chart" width="800" height="400"></canvas>
+    <script>
+
+    chartIt();
+
+    async function chartIt() {
+      const data = await getData();
+      const ctx = document.getElementById('chart').getContext('2d');
+      const myChart = new Chart(ctx, {
+          type: 'line',
+          data: {
+              labels: data.xs,
+              datasets: [{
+                  label: 'Population each generation',
+                  data: data.ys,
+                  fill: true,
+                  backgroundColor: 'rgba(255,99,132,0.2)',
+                  borderColor: 'rgba(255,99,132,1)',
+                  borderWidth: 1
+
+              }]
+          },
+          options: {
+            scales: {
+              yAxes: [{
+                ticks: {
+                    // Include a dollar sign in the ticks
+                    callback: function(value, index, values) {
+                        return value + '';
+                    }
+                }
+            }]
+        }
+    }
+
+      });
+    }
+
+    //  data from data.giss.nava.gov/gistemp
+    //  mean for earthobservatory.nasa.gov
+
+
+    async function getData() {
+      const xs = [];
+      const ys = [];
+
+      const response = await fetch('population.csv');
+      const data = await response.text();
+
+      const table = data.split('\n').slice(1);
+      table.forEach(row => {
+        const cols = row.split(',');
+        const generation = cols[0];
+        xs.push(generation);
+        const population = cols[1];
+        ys.push(parseFloat(population));
+        console.log(generation, population);
+      })
+      return {xs,ys};
+    }
+
+    </script>
+  </body>
+</html>
