@@ -108,6 +108,7 @@ function generationController() {
 
     // Next Generation
     if (nextGen == true) {
+        configureData();
         // Get dots that are alive (out of energy)
         for (let i = 0; i < dots.length; i++) {
             if (dots[i].dead == false) {
