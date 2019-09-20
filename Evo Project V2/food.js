@@ -1,8 +1,13 @@
 class Food {
-    constructor(c1, c2, c3) {
-        this.pos = createVector(5+random(window_width-10), 5+random(window_height-10));
+    constructor(c1, c2, c3, deadDot) {
+        if (deadDot) {
+            this.pos = createVector(deadDot.x, deadDot.y);
+        } else {
+            this.pos = createVector(5+random(window_width-10), 5+random(window_height-10));
+        }
         this.size = 7;
         this.color = [c1,c2,c3]
+        this.energy = givenEnergy;
     }
 
     run() {

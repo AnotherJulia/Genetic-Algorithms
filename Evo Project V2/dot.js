@@ -34,7 +34,7 @@ class Dot {
         this.textOffset = 25;
 
         // Calculating energy etc
-        this.maxenergy = 15000;
+        this.maxenergy = startEnergy;
         this.current_energy = this.maxenergy;
         this.outOfEnergy = false;
     }
@@ -67,7 +67,7 @@ class Dot {
     }
 
     energyController() {
-        let energycost = .5 * (.5 *(this.maxspeed)^2 + this.sense);
+        let energycost = .5 * (this.size * this.maxspeed^2);
 
         if (!this.pause) {
             if (this.current_energy <= 0) {
@@ -118,9 +118,9 @@ class Dot {
         //Draw radius and showFood function only when not dead
         if (!this.dead && !this.outOfEnergy) {
             noFill();
-            stroke(0, 50);
-            strokeWeight(0.5);
-            ellipse(this.pos.x, this.pos.y, this.sense, this.sense);
+            // stroke(0, 50);
+            // strokeWeight(0.5);
+            // ellipse(this.pos.x, this.pos.y, this.sense, this.sense);
 
             this.showFood();
         }
@@ -171,6 +171,7 @@ class Dot {
             // Collision manager
             let d = dist(target.pos.x, target.pos.y, this.pos.x, this.pos.y);
             if (d < this.size) {
+                this.current_energy += target.energy;
                 this.food_eaten += 1;
                 food.splice(targetIndex, 1);
             } 

@@ -14,6 +14,7 @@ let offset_var = 100;
 // arrays of objects
 let dots;
 let food;
+let aliveDots;
 
 // Genetic variable standard
 let gen_maxspeed = [1,3];
@@ -25,10 +26,14 @@ let mutationrate = 0.05;
 
 let alive = new Array();
 let deadDots = new Array();
+let prevgen;
 
 // amounts of objects in ecosystem
 let init_popsize = 4;
 let food_amount = 100;
+
+let startEnergy = 1000;
+let givenEnergy = .1 * startEnergy;
 
 // Running the program
 function setup() { 
@@ -60,29 +65,78 @@ function draw() {
     
     for (let i = 0; i < dots.length; i++) dots[i].run();
     for (let i = 0; i < food.length; i++) food[i].run();
+
+    
     
     // Controllers
     generationController();
     showUI();
+    // createFood();
 }
 
 
 // Show UI function 
 function showUI() {
-    fill(255);
-    stroke(0);
-    strokeWeight(2);
-    textSize(15);
-    textAlign(RIGHT);
-    text("Generation: " + gen, window_width-10, window_height-20);
-    textAlign(LEFT);
-    text("Population size: " + dots.length, 10, window_height-20);
-    text('Food Amount: ' + food.length, 10, window_height-40);
+    
 
+    fill(50);
+    stroke(255);
+    strokeWeight(2);
+    textSize(19);
+    textAlign(LEFT);
+
+    checkAlive();
+
+    // Top
+    text("Generation: " + gen, window_width2-180, 30);
+    text('Dots Remaining: ' + aliveDots.length, window_width2-180, 60);
+    text('Food Remaining: ' + food.length, window_width2-180, 90);
+    
+    // Bottom
+    text("Start Dots: " + dots.length, window_width2-180, window_height-60);
+    text('Start Food: ' + food_amount, window_width2-180, window_height-30);
+
+    
+    let averages_height = window_height/2 - 40
+    text("Averages", window_width2-180, averages_height);
+
+    if (gen != prevgen) {
+        AverageSpeed();
+        AverageSize();
+        AverageSense();
+        prevgen = gen;
+        console.log('run');
+    }
+
+    // Center
+    if (gen > -1) {
+        textSize(15);
+        text("Speed: " + AVG_speed, window_width2-180, averages_height + 30);
+        text("Size: " + AVG_size, window_width2-180, averages_height + 60);
+        text("Speed: " + AVG_sense, window_width2-180, averages_height + 90);
+    } else {
+        text("Speed: Calculating...", window_width2-180, averages_height + 30);
+        text("Size: Calculating..." , window_width2-180, averages_height + 60);
+        text("Speed: Calculating..." , window_width2-180, averages_height + 90);
+    }
+
+    
+    
 
     // Draw line to seperate simulation window from statistics
-    line(window_width, 0, window_width, window_height);
+    strokeWeight(.5);
+    line(window_width+10, 0, window_width+10, window_height);
 }
+
+function checkAlive() {
+    aliveDots = new Array();
+    for (let i = 0; i < dots.length; i++) {
+        if (dots[i].current_energy > 0 ) {
+            aliveDots.push(dots[i]);
+        }
+    }
+}
+
 
 // Genetic algorithm controller
 function generationController() {
@@ -121,8 +175,6 @@ function generationController() {
 }
 
 // reproduction process
-
-
 function resetDots() {
     for (let i = 0; i < dots.length; i++) {
         dots[i].food_eaten = 0;
