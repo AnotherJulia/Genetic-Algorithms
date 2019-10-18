@@ -111,9 +111,9 @@ function showUI() {
     // Center
     if (gen > -1) {
         textSize(15);
-        text("Speed: " + AVG_speed, window_width2-180, averages_height + 30);
-        text("Size: " + AVG_size, window_width2-180, averages_height + 60);
-        text("Speed: " + AVG_sense, window_width2-180, averages_height + 90);
+        text("Speed: " + Math.round(AVG_speed*100)/100, window_width2-180, averages_height + 30);
+        text("Size: " + Math.round(AVG_size*100)/100, window_width2-180, averages_height + 60);
+        text("Sense: " + Math.round(AVG_sense*100)/100, window_width2-180, averages_height + 90);
     } else {
         text("Speed: Calculating...", window_width2-180, averages_height + 30);
         text("Size: Calculating..." , window_width2-180, averages_height + 60);
