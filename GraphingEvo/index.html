@@ -4,22 +4,28 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Evolution Dashboard</title>
-    <style> body {padding: 0; margin: 0;} </style>
+    <style> body {padding: 5; margin: 5;} </style>
     <script src='https://cdn.jsdelivr.net/npm/chart.js@2.8.0/dist/Chart.min.js'></script>
 
     </script>
   </head>
   <body>
 
-    <canvas id="chart" width="800" height="400"></canvas>
+    <canvas id="chartPop" width="600" height="200"></canvas>
+    <canvas id="chartSpeed" width="600" height="200"></canvas>
+    <canvas id="chartSize" width="600" height="200"></canvas>
+    <canvas id="chartSense" width="600" height="200"></canvas>
+    
     <script>
+    chartPop();
+    chartSpeed();
+    chartSize();
+    chartSense();
 
-    chartIt();
-
-    async function chartIt() {
-      const data = await getData();
-      const ctx = document.getElementById('chart').getContext('2d');
-      const myChart = new Chart(ctx, {
+    async function chartPop() {
+      const data = await getDataPop();
+      const ctx = document.getElementById('chartPop').getContext('2d');
+      const myChartPop = new Chart(ctx, {
           type: 'line',
           data: {
               labels: data.xs,
@@ -27,10 +33,75 @@
                   label: 'Population each generation',
                   data: data.ys,
                   fill: true,
-                  backgroundColor: 'rgba(0, 0, 0, 0.4)',
+                  backgroundColor: 'rgba(0, 0, 0, 0.3)',
                   borderColor: 'rgba(0, 0, 0, 1)',
-                  borderWidth: 1
+                  borderWidth: 1.3,
+                  pointRadius: .1,
+                  pointHitRadius: 7
 
+              }]
+          },
+          options: {
+            scales: {
+              yAxes: [{
+                ticks: {  
+                  stepSize: 20
+						}
+					}]
+				}
+        }
+      });
+    }
+
+    async function chartSpeed() {
+      const data = await getDataSpeed();
+      let ctx = document.getElementById('chartSpeed').getContext('2d');
+      const myChart = new Chart(ctx, {
+          type: 'line',
+          data: {
+              labels: data.xs,
+              datasets: [{
+                  label: 'Average Speed each Generation',
+                  data: data.ys,
+                  fill: true,
+                  backgroundColor: 'rgba(44, 36, 198, .4)',
+                  borderColor: 'rgba(44, 36, 198, 1)',
+                  borderWidth: 1.3,
+                  pointRadius: .1,
+                  pointHitRadius: 7
+              }]
+          },
+          options: {
+            scales: {
+              yAxes: [{
+                ticks: {
+                    callback: function(value, index, values) {
+                        return value + '';
+                    },
+                    stepSize: .25
+                }
+            }]
+        }
+    }
+      });
+    }
+
+    async function chartSize() {
+      const data = await getDataSize();
+      let ctx = document.getElementById('chartSize').getContext('2d');
+      const myChartSize = new Chart(ctx, {
+          type: 'line',
+          data: {
+              labels: data.xs,
+              datasets: [{
+                  label: 'Average Size each Generation',
+                  data: data.ys,
+                  fill: true,
+                  backgroundColor: 'rgba(240, 0, 0, .4)',
+                  borderColor: 'rgba(240, 0, 0, 1)',
+                  borderWidth: 1.3,
+                  pointRadius: .1,
+                  pointHitRadius: 7
               }]
           },
           options: {
@@ -45,15 +116,63 @@
             }]
         }
     }
-
       });
     }
 
-    //  data from data.giss.nava.gov/gistemp
-    //  mean for earthobservatory.nasa.gov
+    async function chartSense() {
+      const data = await getDataSense();
+      let ctx = document.getElementById('chartSense').getContext('2d');
+      const myChartSense = new Chart(ctx, {
+          type: 'line',
+          data: {
+              labels: data.xs,
+              datasets: [{
+                  label: 'Average Sense each Generation',
+                  data: data.ys,
+                  fill: true,
+                  backgroundColor: 'rgba(169, 49, 175, .4)',
+                  borderColor: 'rgba(169, 49, 175, 1)',
+                  borderWidth: 1.3,
+                  pointRadius: .1,
+                  pointHitRadius: 7
+              }]
+          },
+          options: {
+            scales: {
+              yAxes: [{
+                ticks: {
+
+                    callback: function(value, index, values) {
+                        return value + '';
+                    }
+                }
+            }]
+        }
+      }
+    })
+  }
+
+  async function getDataPop() {
+    const xs = [];
+    const ys = [];
+
+    const response = await fetch('population.csv');
+    const data = await response.text();
+
+    const table = data.split('\n').slice(1);
+    table.forEach(row => {
+      const cols = row.split(',');
+      const generation = cols[0];
+      xs.push(generation);
+      const population = cols[1];
+      ys.push(parseFloat(population));
+      console.log(generation, population);
+    })
+      return {xs,ys};
+    }
 
 
-    async function getData() {
+    async function getDataSpeed() {
       const xs = [];
       const ys = [];
 
@@ -65,13 +184,50 @@
         const cols = row.split(',');
         const generation = cols[0];
         xs.push(generation);
-        const population = cols[1];
-        ys.push(parseFloat(population));
-        console.log(generation, population);
+        const averageSpeed = cols[2];
+        ys.push(parseFloat(averageSpeed));
+        console.log(generation, averageSpeed);
       })
       return {xs,ys};
     }
 
-    </script>
+  async function getDataSize() {
+    const xs = [];
+    const ys = [];
+
+      const response = await fetch('population.csv');
+      const data = await response.text();
+
+      const table = data.split('\n').slice(1);
+      table.forEach(row => {
+        const cols = row.split(',');
+        const generation = cols[0];
+        xs.push(generation);
+        const averageSize = cols[3];
+        ys.push(parseFloat(averageSize));
+        console.log(generation, averageSize);
+      })
+      return {xs,ys};
+    }
+
+async function getDataSense() {
+      const xs = [];
+      const ys = [];
+
+      const response = await fetch('population.csv');
+      const data = await response.text();
+
+      const table = data.split('\n').slice(1);
+      table.forEach(row => {
+        const cols = row.split(',');
+        const generation = cols[0];
+        xs.push(generation);
+        const averageSense = cols[4];
+        ys.push(parseFloat(averageSense));
+        console.log(generation, averageSense);
+      })
+      return {xs,ys};
+    }
+  </script>
   </body>
 </html>

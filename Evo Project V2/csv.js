@@ -35,7 +35,7 @@ function AverageSpeed() {
     for (let i = 0; i < dots.length; i++) {
         sum += dots[i].maxspeed;
     }
-    AVG_speed = Math.round(sum/dots.length * 10) / 10;
+    AVG_speed = sum/dots.length;
 }
 
 function AverageSize() {
@@ -43,7 +43,7 @@ function AverageSize() {
     for (let i = 0; i < dots.length; i++) {
         sum += dots[i].size;
     }
-    AVG_size = Math.round(sum/dots.length * 10) / 10;
+    AVG_size = sum/dots.length;
 }
 
 function AverageSense() {
@@ -51,5 +51,5 @@ function AverageSense() {
     for (let i = 0; i < dots.length; i++) {
         sum += dots[i].sense;
     }
-    AVG_sense = Math.round(sum/dots.length * 10) / 10;
+    AVG_sense = sum/dots.length;
 }
